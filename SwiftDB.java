@@ -1,6 +1,7 @@
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.util.EntityUtils;
 
 //import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
@@ -97,18 +98,18 @@ public class Client{
      * append container name
      * Print Response
      */
-    public static  createContainer(String url, String containerName){
+    public static HttpRequestBase createContainer(String url, String containerName){
         HttpPut putRequest = new HttpPut(url + "/" + containerName +
                                         "?format=json");
         return putRequest;     
     }
     
-    public static void deleteContainer(String url, String containerName){
+    public static HttpRequestBase deleteContainer(String url, String containerName){
         HttpDelete delRequest = new HttpDelete(url + "/" + containerName +
                                                 "?format=json");
         return delRequest;
     }
-    public static void listObjects(String url, String containerName){
+    public static HttpRequestBase listObjects(String url, String containerName){
         HttpGet getRequest = new HttpGet(url + "/" + containerName +
                                          "?format=json");
         return getRequest;   
@@ -117,7 +118,7 @@ public class Client{
         HttpGet request = new HttpGet(url + "?format=json");
         return request;
     }
-    public static void readObject(String url, String container, String objectName){
+    public static HttpRequestBase readObject(String url, String container, String objectName){
         HttpGet getRequest = new HttpGet(url + "/" + container +
                                       "/" + objectName + "?format=json");
         return getRequest;
@@ -155,8 +156,7 @@ public class Client{
             HttpEntity entity = response.getEntity();
             if(entity != null){
                 byte [] file = EntityUtils.toByteArray(entity);
-            }  
-            return null;            
+            }             
         } catch (Exception e) {
             System.out.println("Executing the Request caught the following error:");
             System.out.println(e);
@@ -170,13 +170,13 @@ public class Client{
         byte [] file = new byte[1024];
         HttpRequestBase putCommand = putObject(STORAGEURL, "SuccesfulContainer", "testObject", file);
         HttpRequestBase examineCont = listObjects(STORAGEURL, "SuccessfulContainer");
-        HttpRequestBase delContCommand = deleteContainer(httpclient, STORAGEURL, "SuccessfulContainer");
+        HttpRequestBase delContCommand = deleteContainer(STORAGEURL, "SuccessfulContainer");
         
         
         sendRequest(httpclient, listAllConts);
         sendRequest(httpclient, createContCommand);
         sendRequest(httpclient, listAllConts);
-        sendRequest(httpclient, putCommand);
-        sendRequest(httpclient, examineCont);
+        //sendRequest(httpclient, putCommand);
+        //sendRequest(httpclient, examineCont);
     }
 }
